@@ -1,7 +1,7 @@
 const express = require('express');
-const City = require('../models/city')
-const auth = require('../middleware/auth')
-const router = new express.Router()
+const router = new express.Router();
+const City = require('../models/city');
+const auth = require('../middleware/auth');
 
 router.post('/cities', auth, async (req, res) => {
     const city = new City({

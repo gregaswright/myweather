@@ -1,53 +1,38 @@
-// const path = require('path')
+require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
-// const geocode = require('./utils/geocode')
-// const forecast = require('./utils/forecast')
 require('./db/mongoose')
+
+const whitelist = ["http://127.0.0.1", "http://127.0.0.1:63057"];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not Allowed by CORS"))
+        }
+    },
+    optionsSuccessStatus: 200
+}
 
 const userRouter = require('./routers/user')
 const cityRouter = require('./routers/city')
 const weatherRouter = require('./routers/weather')
+const googlePlacesKeyRouter = require('./routers/google-places-key')
 
 const app = express()
 
-// console.log(__dirname)
-// const publicDirPath = path.join(__dirname, '../public')
-
-// app.use(express.static(publicDirPath))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(userRouter)
 app.use(cityRouter)
 app.use(weatherRouter)
-
+app.use(googlePlacesKeyRouter)
 
 app.get('/home', cors(), async (req, res) => {
     res.send('Use this Site to get the weather')
 })
-
-// app.get('/weather', async (req, res) => {
-//     {!req.query.address ?  res.send({
-//         error: "You must provide a search term"
-//     })
-//     : geocode(req.query.address, (error, {latitude, longitude, location} = {}) => {
-//         {error ? res.send({error})
-//         : forecast(latitude, longitude, (error, forecastData) => {
-//                 {error ? res.send({error})
-//                 : res.send({
-//                     forecast: forecastData,
-//                     location,
-//                     address: req.query.address
-//                     })
-//                 }    
-//             })
-//         }
-//     })
-//     }
-// })
-
-
 
 app.listen(3000, () => {
     console.log('Server is up on port 3000 -Weather-')
