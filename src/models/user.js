@@ -84,6 +84,15 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
+userSchema.statics.findByToken = async (token) => {
+    const user = await User.findOne({token})
+    if (!user) {
+        throw new Error('no one is logged in')
+    } else if (user) {
+        return user
+    }
+}
+
 // Hash the plain text password
 userSchema.pre('save', async function (next) {
     const user = this
