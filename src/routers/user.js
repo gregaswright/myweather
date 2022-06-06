@@ -7,7 +7,7 @@ const router = new express.Router()
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
-    console.log(user)
+    // console.log(user)
     try {
         await user.checkEmailTaken(user.email)
         await user.save() 
@@ -20,9 +20,11 @@ router.post('/users', async (req, res) => {
 })
 
 router.get('/users/login', async (req, res) => {
+    console.log('GET user token', req.headers.token)
     try {
-        const user = await User.findByToken(req.body.token)
-        res.send({user})
+        const user = await User.findByToken(req.headers.token)
+        // console.log("GET user", user)
+        res.send(user)
     } catch (error) {
         res.status(400).send()
     }

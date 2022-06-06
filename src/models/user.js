@@ -85,7 +85,9 @@ userSchema.statics.findByCredentials = async (email, password) => {
 }
 
 userSchema.statics.findByToken = async (token) => {
-    const user = await User.findOne({token})
+    console.log('Find by Token', token)
+    const user = await User.findOne({'tokens.token': token})
+    console.log('Find by Token', user)
     if (!user) {
         throw new Error('no one is logged in')
     } else if (user) {

@@ -19,8 +19,9 @@ router.post('/cities', auth, async (req, res) => {
 })
 
 router.get('/cities',auth ,async (req, res) => {
+    console.log('GET cities', res)
     try {
-        const cities = await City.find({})
+        const cities = await City.find({owner: req.user._id})
         res.send(cities)
     } catch (e) {
         res.status(500).send()
